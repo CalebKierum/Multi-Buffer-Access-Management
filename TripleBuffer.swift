@@ -1,6 +1,6 @@
 //
-//  TrippleBuffer.swift
-//  Trying Tripple Buffer
+//  TripleBuffer.swift
+//  Trying Triple Buffer
 //
 //  Created by Caleb Kierum on 9/26/17.
 //  Copyright © 2017 Caleb Kierum. All rights reserved.

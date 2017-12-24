@@ -1,4 +1,4 @@
-# Tripple Buffer Generic Class
+# Triple Buffer Generic Class
 
 While Apple does a great job of explaining why a multi-buffering technique is useful to avoid acess conflicts with dynamic data it does not do a very good job making the code easy to use in projects. This may especially confuse people who do not understand how to manage memory in Swift.
 
