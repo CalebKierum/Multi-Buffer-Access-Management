@@ -5,7 +5,6 @@
 //  Created by Caleb Kierum on 9/26/17.
 //  Copyright © 2017 Caleb Kierum. All rights reserved.
 //
-
 import Foundation
 import Metal
 
@@ -13,31 +12,34 @@ class BasicMB<T>
 {
     //iOS is safe with offsets of a multiple of 16 bytes however MacOS requires multiples of 256 bytes
     #if os(iOS)
-    let idealOffset = 16
+    private let idealOffset = 16
     #else
-    let idealOffset = 256
+    private let idealOffset = 256
     #endif
     
-    var deviceBuffer:MTLBuffer
-
+    private var deviceBuffer:MTLBuffer
     
-    var bufferIndex:Int = 0
-    var bufferOffset:Int = 0
-    let maxBuffers:Int
-    let byteAllignedSize:Int
-    let arrayCount:Int
     
+    private var bufferIndex:Int = 0
+    private var bufferOffset:Int = 0
+    private let maxBuffers:Int
+    private let byteAllignedSize:Int
+    private let arrayCount:Int
+    
+    //You can directly edit the data with .data[0] unexpected behavior will occur if you do anything else
     var data: UnsafeMutablePointer<T>
-    var type: T.Type
+    private var type: T.Type
+    
+    
+    
     
     //Creates a multibuffer with maxBuffers slots taking count items per slot. Pass in MTLDevice to increase efficiency
-    init?(type: T.Type, maxBuffers: Int, count: Int, device: MTLDevice?)
+    init?(dataType: T.Type, maxBuffers: Int, count: Int, device: MTLDevice?)
     {
         assert(count > 0, "Cant have a count of 0! There would be no data")
         
-        
         self.maxBuffers = maxBuffers
-        self.type = type
+        self.type = dataType
         arrayCount = count
         
         //If given a device use it otherwise make one
@@ -47,10 +49,10 @@ class BasicMB<T>
         
         //Round up to the nearest idealOffset multiple
         byteAllignedSize = (((MemoryLayout<T>.size * count) + (idealOffset - 1)) / (idealOffset)) * (idealOffset)
-
+        
         guard let buffer = actualDevice!.makeBuffer(length:byteAllignedSize * maxBuffers, options:[MTLResourceOptions.storageModeShared]) else { return nil }
         deviceBuffer = buffer
-            
+        
         data = UnsafeMutableRawPointer(deviceBuffer.contents()).bindMemory(to:type.self, capacity:count)
     }
     
@@ -92,6 +94,11 @@ class BasicMB<T>
         bufferOffset = save
         data = UnsafeMutableRawPointer(deviceBuffer.contents() + bufferOffset).bindMemory(to:type.self, capacity:arrayCount)
     }
+    
+    func buffer() -> MTLBuffer {
+        return deviceBuffer
+    }
+    func offset() -> Int {
+        return bufferOffset
+    }
 }
-
-
