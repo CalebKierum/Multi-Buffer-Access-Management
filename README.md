@@ -5,6 +5,7 @@ While Apple does a great job of explaining why a multi-buffering technique is us
 As a response, I have extracted this technique into a generic class that will allow you to easily implement this in your design.
 
 Here is how you use it:
+
 ~~~~
 //On init
 guard let buff = BasicMB<Int>(type: Int.self, maxBuffers: 3, count: 5, device: self.device) else {return nil}
