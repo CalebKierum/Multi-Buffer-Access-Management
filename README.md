@@ -22,5 +22,5 @@ for i in 0..<4
    uniformInts.update(dataIn: c, index: i)
 }
 //Let the GPU know what offset to read from
-
+encoder.setVertexBuffer(trippleBuffer.buffer(), offset: trippleBuffer.offset(), index: 0)
 ~~~~
