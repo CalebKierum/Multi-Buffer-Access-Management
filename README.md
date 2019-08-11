@@ -21,4 +21,5 @@ for i in 0..<4
    c = Int(arc4_random())
 }
 //Let the GPU know what offset to read from
+encoder.setVertexBuffer(trippleBuffer.buffer(), offset: trippleBuffer.offset(), index: 0)
 ~~~~
