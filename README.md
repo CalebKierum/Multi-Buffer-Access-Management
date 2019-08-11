@@ -1,25 +1,26 @@
 # Triple Buffer Generic Class
 
-While Apple does a great job of explaining why a multi-buffering technique is useful to avoid acess conflicts with dynamic data it does not do a very good job making the code easy to use in projects. This may especially confuse people who do not understand how to manage memory in Swift.
+![Tripple Buffering](https://developer.apple.com/library/archive/documentation/3DDrawing/Conceptual/MTLBestPracticesGuide/Art/ResourceManagement_TripleBuffering_2x.png)
 
-As a response, I have extracted this technique into a generic class that will allow you to easily implement this in your design.
+Due to confusion around memory management in Swift it may often be difficult for developers to implement the suggested practices that allow for significantly better CPU and GPU usage and 2x the performance when involving dynamic data structures.
+
+I have the suggested practices into a generic class that will allow you to easily implement this in your design.
 
 Here is how you use it:
 
 ~~~~
 //On init
-guard let buff = BasicMB<Int>(type: Int.self, maxBuffers: 3, count: 5, device: self.device) else {return nil}
-uniformInts = buff
+let buff = BasicMB<Int>(type: Int.self, maxBuffers: 3, count: 5, device: self.device) else {return nil}
 
 //In update loop
 
 //Wait for GPU to finish reading a slot (recommend usage of a semaphore)
-uniformInts.prepareForUpdatePostSemaphore()
+buff.prepareForUpdatePostSemaphore()
 for i in 0..<4
 {
+   // Where 'c' is the data you want to update at that index
    uniformInts.update(dataIn: c, index: i)
-   c = Int(arc4_random())
 }
 //Let the GPU know what offset to read from
-encoder.setVertexBuffer(trippleBuffer.buffer(), offset: trippleBuffer.offset(), index: 0)
+
 ~~~~
